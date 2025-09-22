@@ -21,9 +21,9 @@
   "license": "MIT",
   "author": "Matias Bertogliati",
   "type": "commonjs",
-  "main": "dist/sidebar-collapse.min.js",
-  "unpkg": "dist/sidebar-collapse.min.js",
-  "jsdelivr": "dist/sidebar-collapse.min.js",
+  "main": "dist/sidebar-collapse.js",
+  "unpkg": "dist/sidebar-collapse.js",
+  "jsdelivr": "dist/sidebar-collapse.js",
   "files": [
     "dist/",
     "src/",
@@ -32,19 +32,10 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "build:prep": "mkdir -p dist",
-    "build:copy": "cp src/sidebar-collapse.js dist/sidebar-collapse.js && cp src/sidebar-collapse.css dist/sidebar-collapse.css",
-    "build:js": "esbuild src/sidebar-collapse.js --minify --outfile=dist/sidebar-collapse.min.js",
-    "build:css": "csso src/sidebar-collapse.css --output dist/sidebar-collapse.min.css",
-    "build": "npm run clean && npm run build:prep && npm run build:copy && npm run build:js && npm run build:css",
-    "prepublishOnly": "npm run build",
-    "dev": "npm run build && docsify serve examples/basic -p 3000"
+    "build": "mkdir -p dist && cp src/sidebar-collapse.js dist/sidebar-collapse.js && cp src/sidebar-collapse.css dist/sidebar-collapse.css",
+    "prepublishOnly": "npm run build"
   },
-  "devDependencies": {
-    "csso-cli": "^5.0.0",
-    "docsify-cli": "^4.4.4",
-    "esbuild": "^0.23.0"
-  },
+  "devDependencies": {},
   "peerDependencies": {
     "docsify": ">=4"
   }

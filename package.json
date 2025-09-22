@@ -1,0 +1,51 @@
+{
+  "name": "docsify-sidebar-collapse",
+  "version": "1.0.0",
+  "description": "A collapsible sidebar plugin for Docsify. Adds toggle buttons to collapse/expand sidebar sections. Not compatible with nested sidebars.",
+  "keywords": [
+    "docsify",
+    "plugin",
+    "sidebar",
+    "collapse",
+    "docsify-plugin",
+    "documentation"
+  ],
+  "homepage": "https://github.com/mbertogliati/docsify-sidebar-collapse#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbertogliati/docsify-sidebar-collapse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mbertogliati/docsify-sidebar-collapse/issues"
+  },
+  "license": "MIT",
+  "author": "Matias Bertogliati",
+  "type": "commonjs",
+  "main": "dist/sidebar-collapse.min.js",
+  "unpkg": "dist/sidebar-collapse.min.js",
+  "jsdelivr": "dist/sidebar-collapse.min.js",
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:prep": "mkdir -p dist",
+    "build:copy": "cp src/sidebar-collapse.js dist/sidebar-collapse.js && cp src/sidebar-collapse.css dist/sidebar-collapse.css",
+    "build:js": "esbuild src/sidebar-collapse.js --minify --outfile=dist/sidebar-collapse.min.js",
+    "build:css": "csso src/sidebar-collapse.css --output dist/sidebar-collapse.min.css",
+    "build": "npm run clean && npm run build:prep && npm run build:copy && npm run build:js && npm run build:css",
+    "prepublishOnly": "npm run build",
+    "dev": "npm run build && docsify serve examples/basic -p 3000"
+  },
+  "devDependencies": {
+    "csso-cli": "^5.0.0",
+    "docsify-cli": "^4.4.4",
+    "esbuild": "^0.23.0"
+  },
+  "peerDependencies": {
+    "docsify": ">=4"
+  }
+}

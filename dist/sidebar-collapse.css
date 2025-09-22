@@ -1,0 +1,82 @@
+/* Sidebar collapse styles
+============================================================================= */
+.sidebar {
+    /* Remove theme-provided pagelink chevrons drawn via background images */
+    --sidebar-nav-pagelink-background: none !important;
+    --sidebar-nav-pagelink-background--active: none !important;
+    --sidebar-nav-pagelink-background--collapse: none !important;
+    --sidebar-nav-pagelink-background--loaded: none !important;
+}
+.sidebar .sidebar-nav li {
+    position: relative;
+}
+
+/* Reserve a left gutter for ALL items so titles align whether
+   or not the item is collapsible */
+.sidebar .sidebar-nav li > a {
+    padding-left: 36px !important; /* make room for the toggle */
+}
+
+.sidebar .sidebar-nav .sc-toggle {
+    position: absolute;
+    top: 0.5em;
+    left: 6px;
+    width: 20px;
+    height: 16px;
+    border: none;
+    background: transparent;
+    display: flex;
+    justify-items: center;
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: var(--mono-shade1); /* sets SVG color via currentColor */
+}
+
+/* Inline SVG chevron icon */
+.sidebar .sidebar-nav .sc-toggle svg {
+    width: 20px;
+    height: 16px;
+    display: block;
+    fill: none;
+    stroke: currentColor; /* inherits from button color */
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.sidebar .sidebar-nav li.has-children:not(.collapsed) > .sc-toggle svg {
+    transform: rotate(90deg);
+}
+
+/* Prepare sublists for animation */
+.sidebar .sidebar-nav li > ul,
+.sidebar .sidebar-nav li > .app-sub-sidebar {
+    overflow: hidden;
+    opacity: 1;
+    /* max-height will be controlled via JS for accurate height */
+    transition: max-height var(--duration-fast) ease, opacity var(--duration-fast) ease;
+}
+
+/* Disable transitions during initial enhancement to avoid unwanted animations */
+.sidebar.sidebar-no-anim .sidebar-nav li > ul,
+.sidebar.sidebar-no-anim .sidebar-nav li > .app-sub-sidebar {
+    transition: none !important;
+}
+.sidebar.sidebar-no-anim .sidebar-nav .sc-toggle svg {
+    transition: none !important;
+}
+
+.sidebar .sidebar-nav li.collapsed > ul,
+.sidebar .sidebar-nav li.collapsed > .app-sub-sidebar {
+    max-height: 0 !important;
+    opacity: 0;
+}
+
+/* subtle nesting indentation */
+.sidebar .sidebar-nav ul ul a,
+.sidebar .sidebar-nav .app-sub-sidebar a {
+    padding-left: 36px; /* additional indent for deeper levels */
+}

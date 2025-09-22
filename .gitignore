@@ -1,0 +1,22 @@
+# IDEs and editors
+.idea
+.vscode
+
+# Dependencies
+node_modules
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+
+# Build caches and temporary files
+.tmp
+.cache
+
+# Old build dir (not used by this project)
+build

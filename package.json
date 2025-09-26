@@ -1,6 +1,6 @@
 {
   "name": "@mbertogliati/docsify-sidebar-collapse",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A collapsible sidebar plugin for Docsify. Adds toggle buttons to collapse/expand sidebar sections. Not compatible with nested sidebars.",
   "keywords": [
     "docsify",

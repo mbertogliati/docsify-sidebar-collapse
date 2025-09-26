@@ -167,9 +167,70 @@
       const svg = toggle.querySelector('svg');
       if (svg) svg.style.transition = 'none';
 
+      // Ensure a label element sits immediately after the toggle for non-link parents.
+      // Prefer existing inline elements (em/strong/span/etc.); fall back to creating .sc-label from text nodes.
+      let anchor = li.querySelector(':scope > a');
+      if (!anchor) {
+        // Find an existing non-link, non-sublist element to serve as label
+        let existingLabel = li.querySelector(':scope > :not(.sc-toggle):not(a):not(ul):not(.app-sub-sidebar)');
+        const sub = findChildSublist(li);
+        if (existingLabel) {
+          // Move it to be right after the toggle and before any sublist
+          if (sub) {
+            // Ensure toggle is before existingLabel already; if not, toggle was inserted at start
+            // Place existingLabel right before sub (which is after toggle)
+            li.insertBefore(existingLabel, sub);
+          } else {
+            // Ensure it comes right after toggle
+            if (existingLabel.previousSibling !== toggle) {
+              // append after toggle by inserting before toggle.nextSibling if exists
+              if (toggle.nextSibling) li.insertBefore(existingLabel, toggle.nextSibling); else li.appendChild(existingLabel);
+            }
+          }
+          // Remove stray leading text nodes between toggle and label to avoid overlap
+          let node = toggle.nextSibling;
+          while (node && node !== existingLabel) {
+            const next = node.nextSibling;
+            if (node.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+              node.remove();
+            }
+            node = next;
+          }
+        } else {
+          // No existing element; create a .sc-label from leading text nodes
+          let labelEl = li.querySelector(':scope > .sc-label');
+          if (!labelEl) {
+            labelEl = document.createElement('span');
+            labelEl.className = 'sc-label';
+            // Collect leading text nodes as the label text
+            let text = '';
+            const toRemove = [];
+            Array.from(li.childNodes).forEach((n) => {
+              if (n === toggle) return;
+              // Stop before sublists; label goes before the first sublist
+              if (n.nodeType === Node.ELEMENT_NODE && (n.matches && (n.matches(':scope > ul') || n.matches(':scope > .app-sub-sidebar')))) {
+                return;
+              }
+              if (n.nodeType === Node.TEXT_NODE) {
+                if (n.textContent && n.textContent.trim()) {
+                  text += (text ? ' ' : '') + n.textContent.trim();
+                }
+                toRemove.push(n);
+              }
+            });
+            labelEl.textContent = text;
+            // Insert the label right after the toggle, before any sublist
+            if (sub) li.insertBefore(labelEl, sub); else if (toggle.nextSibling) li.insertBefore(labelEl, toggle.nextSibling); else li.appendChild(labelEl);
+            toRemove.forEach((n) => n.remove());
+          }
+        }
+      }
+
       // Key and state
-      const anchor = li.querySelector(':scope > a');
-      const key = anchor ? (anchor.getAttribute('href') || anchor.textContent.trim()) : Array.from(li.childNodes).map(n => n.textContent || '').join('').trim();
+      const key = (anchor && (anchor.getAttribute('href') || anchor.textContent.trim()))
+        || (li.querySelector(':scope > .sc-toggle + :not(a):not(ul):not(.app-sub-sidebar)')
+            ? li.querySelector(':scope > .sc-toggle + :not(a):not(ul):not(.app-sub-sidebar)').textContent.trim()
+            : (li.querySelector(':scope > .sc-label') ? li.querySelector(':scope > .sc-label').textContent.trim() : Array.from(li.childNodes).map(n => n.textContent || '').join('').trim()));
       const collapsed = stored[key] !== undefined ? !!stored[key] : true;
       if (collapsed) {
         li.classList.add('collapsed');
